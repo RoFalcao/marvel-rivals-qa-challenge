@@ -1,0 +1,32 @@
+{
+  "name": "marvel-rivals-qa-challenge",
+  "version": "1.0.0",
+  "description": "Projeto desenvolvido como parte de um desafio técnico para a posição de **Analista de Qualidade Pleno**, com foco na definição e aplicação de uma estratégia de qualidade para uma solução baseada no universo Marvel Rivals.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RoFalcao/marvel-rivals-qa-challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RoFalcao/marvel-rivals-qa-challenge/issues"
+  },
+  "homepage": "https://github.com/RoFalcao/marvel-rivals-qa-challenge#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.3.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}
