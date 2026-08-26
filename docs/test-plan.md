@@ -46,6 +46,10 @@ A camada Web contempla:
 - Acessibilidade básica;
 - Tratamento de falhas de carregamento.
 
+Durante a exploração da aplicação, não foram identificados controles de filtro disponíveis na tela de seleção de heróis.
+
+Por esse motivo, o cenário relacionado a filtros permanece documentado na matriz como parte da análise de cobertura, porém não será selecionado para automação.
+
 ### 2.3 Cenários transversais
 
 Também serão considerados cenários relacionados a:
@@ -195,16 +199,24 @@ O objetivo é validar contrato e comportamento da API, e não criar dependência
 
 ### 4.2 Web
 
+### 4.2 Web
+
 A camada Web será utilizada para validar as principais jornadas do usuário no portal Marvel Rivals Heroes.
 
-A automação será concentrada inicialmente nos principais fluxos:
+Os cenários selecionados para automação são:
 
 1. Carregamento da página;
 2. Exibição da lista de heróis;
 3. Navegação para detalhes;
-4. Utilização dos filtros disponíveis.
+4. Renderização das imagens.
 
-Após a cobertura dos fluxos principais, os demais cenários poderão ser avaliados conforme risco e viabilidade técnica.
+Durante a exploração da aplicação, não foram identificados controles de filtro disponíveis na tela de seleção de heróis.
+
+Dessa forma, o cenário de filtros inicialmente considerado para automação foi substituído pela validação de renderização das imagens.
+
+A decisão considera o comportamento efetivamente disponível na aplicação e o valor da correta exibição das imagens para a experiência de navegação pelos heróis.
+
+Os demais cenários Web permanecem documentados na matriz e poderão ser avaliados conforme risco e viabilidade técnica.
 
 ---
 

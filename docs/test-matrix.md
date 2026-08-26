@@ -50,8 +50,8 @@ Os cenários abaixo foram adaptados para preservar os principais aspectos avalia
 | UI-01 | Validar carregamento da página | Web | Alta | Sim | Smoke test e pré-condição para as demais jornadas |
 | UI-02 | Validar exibição da lista de heróis | Web | Alta | Sim | Representa a funcionalidade principal da página |
 | UI-03 | Validar navegação para detalhes | Web | Alta | Sim | Jornada principal do usuário para consultar informações de um herói |
-| UI-04 | Validar filtros disponíveis | Web | Média | Sim | Funcionalidade relevante para localização e exploração dos heróis |
-| UI-05 | Validar renderização das imagens | Web | Média | Não | Pode ser validado durante os fluxos principais sem necessidade de um cenário automatizado dedicado |
+| UI-04 | Validar filtros disponíveis | Web | Média | Não | Durante a exploração da interface não foram identificados filtros disponíveis na tela de seleção de heróis |
+| UI-05 | Validar renderização das imagens | Web | Média | Sim | Imagens são parte relevante da experiência de navegação e podem falhar mesmo quando o restante da página carrega |
 | UI-06 | Validar responsividade básica | Web | Média | Não | Importante, porém possui menor prioridade em relação aos principais fluxos funcionais |
 | UI-07 | Validar acessibilidade básica | Web | Média | Não | Relevante, mas exige abordagem específica e não foi priorizado no recorte de automação |
 | UI-08 | Validar comportamento em falha de carregamento | Web / Integração | Alta | Avaliar | Depende da possibilidade de controlar ou interceptar as requisições realizadas pelo portal |
@@ -87,7 +87,7 @@ A automação foi intencionalmente limitada aos cenários considerados de maior 
 5. `UI-01` — Validar carregamento da página;
 6. `UI-02` — Validar exibição da lista de heróis;
 7. `UI-03` — Validar navegação para detalhes;
-8. `UI-04` — Validar filtros disponíveis.
+8. `UI-05` — Validar renderização das imagens.
 
 ## Resiliência
 
