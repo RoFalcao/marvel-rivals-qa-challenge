@@ -59,4 +59,51 @@ test.describe('Marvel Developer API', () => {
         expect(typeof body.data.user.username).toBe('string');
     });
 
+    test('API-03 - deve retornar erro ao realizar requisição sem query GraphQL', async ({ request }) => {
+        const response = await request.post(process.env.MARVEL_API_BASE_URL!, {
+            headers: {
+                Authorization: `Bearer ${process.env.MARVEL_API_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            data: {},
+        });
+
+        expect(response.status()).toBe(400);
+
+        const body = await response.json();
+
+        expect(body.errors).toBeDefined();
+        expect(body.errors[0].message).toBe('Must provide query string.');
+    });
+
+    test('API-04 - deve restringir acesso ao schema autenticado quando não houver autenticação', async ({ request }) => {
+        const response = await request.post(process.env.MARVEL_API_BASE_URL!, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: {
+                query: `
+                    query getUser {
+                        user {
+                            pk
+                            username
+                        }
+                    }
+                `,
+            },
+        });
+
+        expect(response.status()).toBe(400);
+
+        const body = await response.json();
+
+        expect(body.info).toBeDefined();
+        expect(body.info[0].message).toContain('unauthenticated');
+
+        expect(body.errors).toBeDefined();
+        expect(body.errors[0].message).toContain(
+            'Cannot query field "user" on type "PublicQueries"'
+        );
+    });
+
 });
