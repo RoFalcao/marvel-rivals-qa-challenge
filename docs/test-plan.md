@@ -4,9 +4,9 @@
 
 Definir a estratégia de qualidade para o desafio **Marvel Rivals QA Challenge**, considerando testes de API, Web e cenários transversais.
 
-A abordagem será baseada em risco, priorizando os fluxos de maior impacto para o usuário e os cenários que ofereçam maior valor para detecção de regressões.
+A abordagem é baseada em risco, priorizando os fluxos de maior impacto para o usuário e os cenários que ofereçam maior valor para detecção de regressões.
 
-A automação será seletiva, com foco em qualidade, sustentabilidade e clareza dos testes, em vez de quantidade de cenários automatizados.
+A automação é seletiva, com foco em qualidade, sustentabilidade e clareza dos testes, em vez de quantidade de cenários automatizados.
 
 ---
 
@@ -40,7 +40,7 @@ A camada Web contempla:
 - Carregamento da aplicação;
 - Exibição da lista de heróis;
 - Navegação para detalhes;
-- Filtros disponíveis;
+- Filtros, quando disponíveis;
 - Renderização de imagens;
 - Responsividade básica;
 - Acessibilidade básica;
@@ -48,11 +48,11 @@ A camada Web contempla:
 
 Durante a exploração da aplicação, não foram identificados controles de filtro disponíveis na tela de seleção de heróis.
 
-Por esse motivo, o cenário relacionado a filtros permanece documentado na matriz como parte da análise de cobertura, porém não será selecionado para automação.
+Por esse motivo, o cenário relacionado a filtros permanece documentado na matriz como parte da análise de cobertura, porém não foi selecionado para automação.
 
 ### 2.3 Cenários transversais
 
-Também serão considerados cenários relacionados a:
+Também são considerados cenários relacionados a:
 
 - Loading;
 - Erro de API;
@@ -159,11 +159,11 @@ Nem todos os cenários possuem o mesmo valor ou precisam ser automatizados.
 
 ## 4. Estratégia de testes
 
-A estratégia será distribuída por camadas, buscando executar as validações no nível mais adequado.
+A estratégia é distribuída por camadas, buscando executar as validações no nível mais adequado.
 
 ### 4.1 API
 
-A camada de API utilizará a **Marvel Developer API**.
+A camada de API utiliza a **Marvel Developer API**.
 
 A API utiliza:
 
@@ -173,7 +173,7 @@ A API utiliza:
 - payload JSON;
 - resposta estruturada em JSON.
 
-A camada será responsável por validar:
+A camada é responsável por validar:
 
 - Autenticação;
 - Disponibilidade da API;
@@ -184,24 +184,23 @@ A camada será responsável por validar:
 - Controle de acesso;
 - Comportamento diante de requisições inválidas.
 
-Os cenários inicialmente selecionados para automação são:
+Os cenários selecionados para automação são:
 
 1. Consultar usuário autenticado com sucesso;
 2. Validar estrutura da resposta do usuário;
 3. Realizar requisição sem query GraphQL;
-4. Realizar requisição sem autenticação.
-
-A validação de valores específicos do usuário será evitada quando não agregar valor ao cenário.
+4. Realizar requisição sem autenticação;
+5. Realizar requisição com token inválido.
 
 O objetivo é validar contrato e comportamento da API, e não criar dependência de dados pessoais ou valores fixos.
+
+Os cenários negativos de autenticação contemplam tanto a ausência de credenciais quanto o envio de um Bearer Token inválido, permitindo validar comportamentos distintos de controle de acesso.
 
 ---
 
 ### 4.2 Web
 
-### 4.2 Web
-
-A camada Web será utilizada para validar as principais jornadas do usuário no portal Marvel Rivals Heroes.
+A camada Web é utilizada para validar as principais jornadas do usuário no portal Marvel Rivals Heroes.
 
 Os cenários selecionados para automação são:
 
@@ -216,7 +215,7 @@ Dessa forma, o cenário de filtros inicialmente considerado para automação foi
 
 A decisão considera o comportamento efetivamente disponível na aplicação e o valor da correta exibição das imagens para a experiência de navegação pelos heróis.
 
-Os demais cenários Web permanecem documentados na matriz e poderão ser avaliados conforme risco e viabilidade técnica.
+Os demais cenários Web permanecem documentados na matriz conforme risco e viabilidade técnica.
 
 ---
 
@@ -224,22 +223,20 @@ Os demais cenários Web permanecem documentados na matriz e poderão ser avaliad
 
 Cenários de indisponibilidade possuem alta relevância neste projeto porque esse risco foi observado durante a execução real do desafio.
 
-Serão considerados:
+São considerados:
 
 - Timeout;
 - Indisponibilidade de dependências;
 - Falhas de comunicação;
 - Comportamento da aplicação diante de respostas inesperadas.
 
-Quando aplicável, mocks ou interceptações poderão ser utilizados para produzir cenários determinísticos.
-
-A utilização de mocks será limitada a situações nas quais exista um comportamento real da aplicação que possa ser validado.
+Os cenários automatizados de resiliência são executados de forma controlada, permitindo validar timeout e indisponibilidade sem provocar falhas reais nos serviços externos.
 
 ---
 
 ## 5. Critérios de priorização
 
-A priorização dos testes será baseada nos seguintes fatores:
+A priorização dos testes é baseada nos seguintes fatores:
 
 - Impacto para o usuário;
 - Criticidade da funcionalidade;
@@ -295,9 +292,9 @@ Exemplos:
 
 ## 6. Estratégia de automação
 
-A automação será seletiva.
+A automação é seletiva.
 
-Nem todos os cenários analisados serão automatizados.
+Nem todos os cenários analisados foram automatizados.
 
 A decisão de automatizar considera:
 
@@ -309,7 +306,7 @@ A decisão de automatizar considera:
 - Custo de manutenção;
 - Possibilidade de execução contínua.
 
-A priorização seguirá, de forma geral:
+A priorização segue, de forma geral:
 
 1. Happy paths;
 2. Autenticação;
@@ -318,7 +315,7 @@ A priorização seguirá, de forma geral:
 5. Cenários de resiliência;
 6. Cenários complementares.
 
-A automação não será expandida apenas para aumentar a quantidade de testes.
+A automação não é expandida apenas para aumentar a quantidade de testes.
 
 ---
 
@@ -326,7 +323,7 @@ A automação não será expandida apenas para aumentar a quantidade de testes.
 
 ### Playwright + TypeScript
 
-A ferramenta escolhida para a automação será **Playwright com TypeScript**.
+A ferramenta escolhida para a automação é **Playwright com TypeScript**.
 
 A decisão considera:
 
@@ -368,11 +365,11 @@ Portanto, a escolha do Playwright não representa uma limitação do Cypress ou 
 
 ## 8. Distribuição por camada
 
-A estratégia seguirá, de forma geral:
+A estratégia segue, de forma geral:
 
 - API para autenticação, contrato, dados e tratamento de respostas;
 - Web para validação das principais jornadas do usuário;
-- Interceptações ou mocks para cenários controlados de falha e resiliência;
+- Resiliência para cenários controlados de timeout e indisponibilidade;
 - Cenários transversais quando agregarem valor à cobertura.
 
 O objetivo é evitar concentrar todas as validações na camada Web quando elas puderem ser realizadas de forma mais rápida e sustentável em uma camada inferior.
@@ -381,7 +378,7 @@ O objetivo é evitar concentrar todas as validações na camada Web quando elas 
 
 ## 9. Dados de teste e configuração
 
-As configurações do projeto serão armazenadas por meio de variáveis de ambiente.
+As configurações do projeto são armazenadas por meio de variáveis de ambiente.
 
 Exemplo:
 

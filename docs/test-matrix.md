@@ -24,20 +24,20 @@ Após o reporte da indisponibilidade, foi autorizada pelos responsáveis pelo de
 
 Os cenários abaixo foram adaptados para preservar os principais aspectos avaliados no desafio:
 
-- autenticação;
-- consumo de API;
-- validação de respostas;
-- validação de contrato;
-- tratamento de erros;
-- organização e sustentabilidade da automação.
+- Autenticação;
+- Consumo de API;
+- Validação de respostas;
+- Validação de contrato;
+- Tratamento de erros;
+- Organização e sustentabilidade da automação.
 
 | ID | Cenário | Camada | Prioridade | Automatizar | Justificativa |
 |---|---|---|---|---|---|
 | API-01 | Consultar usuário autenticado com sucesso | API | Alta | Sim | Happy path que valida disponibilidade da API, autenticação via Bearer Token e retorno de dados |
 | API-02 | Validar estrutura da resposta do usuário | API | Alta | Sim | Valida o contrato básico da resposta e a presença dos campos esperados |
 | API-03 | Realizar requisição sem query GraphQL | API | Média | Sim | Valida o tratamento de uma requisição inválida e o retorno de erro esperado |
-| API-04 | Realizar requisição sem autenticação | API | Alta | Sim | Valida o controle de acesso a um recurso protegido |
-| API-05 | Realizar requisição com token inválido | API | Alta | Não | Cenário relevante, porém possui cobertura semelhante ao cenário sem autenticação e não foi priorizado |
+| API-04 | Realizar requisição sem autenticação | API | Alta | Sim | Valida que uma requisição não autenticada utiliza o schema público limitado e restringe o acesso ao recurso protegido |
+| API-05 | Realizar requisição com token inválido | API | Alta | Sim | Valida o tratamento de um Bearer Token inválido e o retorno HTTP 401 para credencial inválida ou expirada |
 | API-06 | Validar informações de rate limit | API | Média | Não | Informação importante para análise da API, mas não prioritária para a automação selecionada |
 | API-07 | Validar tempo de resposta da API | API | Média | Não | Relevante para observação, porém não priorizado sem definição de baseline ou SLA específico |
 
@@ -54,7 +54,7 @@ Os cenários abaixo foram adaptados para preservar os principais aspectos avalia
 | UI-05 | Validar renderização das imagens | Web | Média | Sim | Imagens são parte relevante da experiência de navegação e podem falhar mesmo quando o restante da página carrega |
 | UI-06 | Validar responsividade básica | Web | Média | Não | Importante, porém possui menor prioridade em relação aos principais fluxos funcionais |
 | UI-07 | Validar acessibilidade básica | Web | Média | Não | Relevante, mas exige abordagem específica e não foi priorizado no recorte de automação |
-| UI-08 | Validar comportamento em falha de carregamento | Web / Integração | Alta | Avaliar | Depende da possibilidade de controlar ou interceptar as requisições realizadas pelo portal |
+| UI-08 | Validar comportamento em falha de carregamento | Web / Integração | Alta | Não | Cenário relevante, porém não selecionado no recorte final de automação devido à dependência de controle das requisições realizadas pelo portal |
 
 ---
 
@@ -63,11 +63,11 @@ Os cenários abaixo foram adaptados para preservar os principais aspectos avalia
 | ID | Cenário | Camada | Prioridade | Automatizar | Justificativa |
 |---|---|---|---|---|---|
 | TRV-01 | Loading durante requisição | Web | Média | Não | Comportamento complementar aos fluxos principais |
-| TRV-02 | Erro de API | Integração | Alta | Não | Parte do tratamento de erro será coberta pelos cenários negativos da Marvel Developer API |
-| TRV-03 | Timeout | Integração | Alta | Sim | Valida a resiliência da aplicação quando uma dependência excede o tempo esperado de resposta |
+| TRV-02 | Erro de API | Integração | Alta | Não | Parte do tratamento de erro é coberta pelos cenários negativos da Marvel Developer API |
+| TRV-03 | Timeout | API / Resiliência | Alta | Sim | Valida de forma controlada o tratamento de uma requisição que excede o limite de tempo configurado |
 | TRV-04 | Múltiplos cliques | Web | Média | Não | Menor risco em relação aos fluxos funcionais priorizados |
-| TRV-05 | Console sem erros | Web | Média | Não | Validação complementar que poderá ser observada durante a execução dos testes |
-| TRV-06 | Tratamento de indisponibilidade da API | Integração | Alta | Sim | Risco efetivamente identificado durante o desafio e relevante para demonstrar tratamento de falhas |
+| TRV-05 | Console sem erros | Web | Média | Não | Validação complementar que pode ser observada durante a execução dos testes |
+| TRV-06 | Tratamento de indisponibilidade da API | API / Resiliência | Alta | Sim | Valida a identificação controlada de indisponibilidade de uma dependência sem provocar falha no serviço real |
 
 ---
 
@@ -80,53 +80,34 @@ A automação foi intencionalmente limitada aos cenários considerados de maior 
 1. `API-01` — Consultar usuário autenticado com sucesso;
 2. `API-02` — Validar estrutura da resposta do usuário;
 3. `API-03` — Realizar requisição sem query GraphQL;
-4. `API-04` — Realizar requisição sem autenticação.
+4. `API-04` — Realizar requisição sem autenticação;
+5. `API-05` — Realizar requisição com token inválido.
 
 ## Web
 
-5. `UI-01` — Validar carregamento da página;
-6. `UI-02` — Validar exibição da lista de heróis;
-7. `UI-03` — Validar navegação para detalhes;
-8. `UI-05` — Validar renderização das imagens.
+1. `UI-01` — Validar carregamento da página;
+2. `UI-02` — Validar exibição da lista de heróis;
+3. `UI-03` — Validar navegação para detalhes;
+4. `UI-05` — Validar renderização das imagens.
 
 ## Resiliência
 
-9. `TRV-03` — Timeout;
-10. `TRV-06` — Tratamento de indisponibilidade da API.
+1. `TRV-03` — Timeout;
+2. `TRV-06` — Tratamento de indisponibilidade da API.
+
+**Total automatizado: 11 cenários.**
 
 ---
 
-# 5. Estratégia da API alternativa
+# 5. Comportamentos observados na API alternativa
 
-A API originalmente indicada no desafio apresentou indisponibilidade durante o período de desenvolvimento, retornando HTTP `502 Bad Gateway`.
+Durante a exploração manual da **Marvel Developer API** foram observados comportamentos utilizados como referência para a definição e implementação dos testes automatizados.
 
-A indisponibilidade foi:
+### Requisição autenticada válida
 
-- reproduzida;
-- documentada com evidências;
-- comunicada aos responsáveis pelo desafio.
+Uma query válida utilizando Bearer Token retornou HTTP `200` e os dados do usuário.
 
-Após o reporte, foi autorizada a utilização da **Marvel Developer API** como alternativa para a camada de API.
-
-A substituição não busca reproduzir exatamente o domínio funcional da API original, mas preservar os principais aspectos técnicos avaliados no desafio, como:
-
-- autenticação;
-- consumo de API;
-- validação de contrato;
-- tratamento de respostas;
-- cenários positivos e negativos;
-- automação;
-- organização da solução.
-
-A Marvel Developer API utiliza GraphQL e autenticação por Bearer Token.
-
-Durante a exploração manual da API foram observados os seguintes comportamentos:
-
-### Requisição válida
-
-Uma query autenticada para consulta do usuário retornou dados com sucesso.
-
-Exemplo de comportamento esperado:
+Exemplo de comportamento observado:
 
 ```json
 {
@@ -137,3 +118,48 @@ Exemplo de comportamento esperado:
     }
   }
 }
+```
+
+Os valores específicos do usuário não são utilizados como dados fixos na automação.
+
+Esse comportamento é validado pelos cenários `API-01` e `API-02`.
+
+### Requisição sem query GraphQL
+
+Uma requisição autenticada sem uma query GraphQL retornou HTTP `400`.
+
+```json
+{
+  "errors": [
+    {
+      "message": "Must provide query string."
+    }
+  ]
+}
+```
+
+Esse comportamento é validado pelo cenário `API-03`.
+
+### Requisição sem autenticação
+
+Uma requisição sem Bearer Token utilizou o schema público limitado e retornou HTTP `400` ao tentar acessar o campo `user`.
+
+A resposta informou que a requisição não estava autenticada e que o acesso estava sendo realizado por meio do schema público.
+
+Esse comportamento é validado pelo cenário `API-04`.
+
+### Requisição com token inválido
+
+Uma requisição utilizando um Bearer Token inválido retornou HTTP `401 Unauthorized`.
+
+```json
+{
+  "errors": [
+    {
+      "message": "OAuth2 token expired or invalid"
+    }
+  ]
+}
+```
+
+Esse comportamento é validado pelo cenário `API-05`.

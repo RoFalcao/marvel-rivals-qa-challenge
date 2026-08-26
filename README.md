@@ -4,17 +4,20 @@ Projeto desenvolvido como parte de um desafio técnico para a posição de **Ana
 
 ## Objetivo
 
-O objetivo deste projeto é demonstrar uma abordagem de Quality Engineering baseada em risco, contemplando diferentes camadas de teste e priorizando cenários relevantes para automação.
+O objetivo deste projeto é demonstrar uma abordagem de **Quality Engineering baseada em risco**, contemplando diferentes camadas de teste e priorizando cenários relevantes para automação.
 
 A solução contempla:
 
 - Testes de API;
 - Testes Web;
+- Testes de resiliência;
 - Estratégia de testes baseada em risco;
 - Matriz de cenários e priorização;
 - Automação seletiva;
 - Tratamento de cenários de erro e indisponibilidade;
 - Evidências de execução.
+
+---
 
 ## Aplicações utilizadas
 
@@ -22,13 +25,13 @@ A solução contempla:
 
 **Marvel Developer API**
 
-A API originalmente proposta no desafio, Marvel Rivals API, apresentou indisponibilidade durante o desenvolvimento, com retorno HTTP `502 Bad Gateway`.
+A API originalmente proposta no desafio, **Marvel Rivals API**, apresentou indisponibilidade durante o desenvolvimento, com retorno HTTP `502 Bad Gateway`.
 
 A indisponibilidade foi reproduzida, documentada com evidências e comunicada aos responsáveis pelo desafio.
 
 Após o reporte, foi autorizada a utilização da **Marvel Developer API** como alternativa para a execução da camada de API.
 
-A API alternativa utiliza GraphQL e autenticação via Bearer Token.
+A API alternativa utiliza **GraphQL** e autenticação via **Bearer Token**.
 
 A substituição foi realizada com o objetivo de preservar os principais aspectos técnicos avaliados no desafio, incluindo:
 
@@ -46,14 +49,16 @@ A substituição foi realizada com o objetivo de preservar os principais aspecto
 
 **Marvel Rivals Heroes**
 
-O portal público Marvel Rivals Heroes será utilizado como aplicação de referência para os testes de interface Web.
+O portal público Marvel Rivals Heroes foi utilizado como aplicação de referência para os testes de interface Web.
 
-Os principais fluxos selecionados para automação são:
+Os principais fluxos selecionados para automação foram:
 
 - Carregamento da página;
 - Exibição da lista de heróis;
-- Navegação para detalhes;
-- Utilização dos filtros disponíveis.
+- Navegação para detalhes de um herói;
+- Renderização da imagem do herói.
+
+---
 
 ## Estratégia de testes
 
@@ -61,7 +66,7 @@ A estratégia é baseada em testes distribuídos por camadas:
 
 - **API:** autenticação, validação de contrato, estrutura das respostas e tratamento de requisições inválidas;
 - **Web:** validação dos principais fluxos e comportamentos da interface;
-- **Cenários transversais:** validação de timeout, erros e indisponibilidade de serviços.
+- **Resiliência:** validação de timeout e indisponibilidade de serviços.
 
 A priorização dos cenários considera:
 
@@ -70,9 +75,10 @@ A priorização dos cenários considera:
 - Criticidade;
 - Valor para detecção de regressões;
 - Custo de implementação;
-- Custo de manutenção.
+- Custo de manutenção;
+- Dependência e estabilidade dos serviços externos.
 
-A automação é seletiva. Nem todos os cenários identificados serão automatizados, priorizando os casos de maior valor para a solução.
+A automação foi realizada de forma seletiva. Nem todos os cenários identificados na matriz foram automatizados, priorizando os casos de maior valor, risco e viabilidade técnica para o escopo do desafio.
 
 A estratégia detalhada está disponível em:
 
@@ -82,6 +88,36 @@ A matriz de cenários está disponível em:
 
 `docs/test-matrix.md`
 
+---
+
+## Cobertura automatizada
+
+A suíte implementada contém **11 testes automatizados**, distribuídos entre três camadas.
+
+### Web — 4 testes
+
+- `UI-01` — Validação do carregamento da página;
+- `UI-02` — Validação da exibição da lista de heróis;
+- `UI-03` — Validação da navegação para detalhes de um herói;
+- `UI-05` — Validação da renderização da imagem do herói.
+
+### API — 4 testes
+
+- `API-01` — Consulta de usuário autenticado com sucesso;
+- `API-02` — Validação da estrutura da resposta do usuário;
+- `API-03` — Validação de requisição sem query GraphQL;
+- `API-04` — Validação da restrição ao schema autenticado em requisição sem autenticação;
+- `API-05` — Validação de requisição com token de autenticação inválido.
+
+### Resiliência — 2 testes
+
+- `TRV-03` — Tratamento de timeout de requisição;
+- `TRV-06` — Identificação de indisponibilidade de serviço.
+
+A relação completa dos cenários analisados, incluindo casos não automatizados e suas respectivas prioridades, está disponível em `docs/test-matrix.md`.
+
+---
+
 ## Estrutura do projeto
 
 ```text
@@ -89,12 +125,21 @@ marvel-rivals-qa-challenge/
 ├── docs/
 │   ├── test-matrix.md
 │   └── test-plan.md
-├── evidences/
-├── fixtures/
-│   └── mocks/
+│
+├── evidencias/
+│   ├── api-alternativa/
+│   ├── api-original-indisponivel/
+│   ├── playwright/
+│   └── suite-completa/
+│
 ├── tests/
 │   ├── api/
+│   │   └── user.spec.ts
+│   ├── resilience/
+│   │   └── resilience.spec.ts
 │   └── web/
+│       └── heroes.spec.ts
+│
 ├── .env.example
 ├── .gitignore
 ├── package.json
@@ -103,19 +148,36 @@ marvel-rivals-qa-challenge/
 └── README.md
 ```
 
+### Organização
+
+- `docs/`: documentação da estratégia de qualidade, incluindo plano e matriz de testes;
+- `evidencias/api-alternativa/`: evidências das validações realizadas contra a API alternativa;
+- `evidencias/api-original-indisponivel/`: evidências da indisponibilidade identificada na API originalmente prevista para o desafio;
+- `evidencias/playwright/`: evidências relacionadas às execuções automatizadas;
+- `evidencias/suite-completa/`: evidências da execução completa da suíte;
+- `tests/api/`: testes automatizados da Marvel Developer API;
+- `tests/web/`: testes automatizados da interface Web do Marvel Rivals;
+- `tests/resilience/`: testes relacionados a timeout e indisponibilidade;
+- `.env.example`: exemplo das variáveis de ambiente necessárias para execução;
+- `playwright.config.ts`: configuração central do Playwright.
+
+---
+
 ## Tecnologias
 
-A stack de automação definida para o projeto é:
+A stack utilizada no projeto é composta por:
 
 - Node.js;
 - TypeScript;
 - Playwright;
 - dotenv;
-- GraphQL para os testes da Marvel Developer API.
+- GraphQL como linguagem de consulta da Marvel Developer API.
 
-O **Playwright** foi escolhido por permitir a automação das camadas Web e API no mesmo ecossistema, além de oferecer recursos para interceptação de requisições, execução em diferentes navegadores, screenshots, vídeos e traces.
+O **Playwright** foi escolhido por permitir a automação das camadas Web e API no mesmo ecossistema, além de oferecer suporte a múltiplos navegadores, execução paralela, relatórios, screenshots, vídeos e traces.
 
 A escolha também reduz a necessidade de dependências adicionais para o escopo proposto.
+
+---
 
 ## Configuração
 
@@ -140,13 +202,46 @@ Para criar o arquivo local de configuração:
 cp .env.example .env
 ```
 
-O Personal Access Token da Marvel Developer API deve ser informado somente no arquivo `.env` local.
+### Gerando o token da Marvel Developer API
+
+Para executar os testes de API é necessário possuir uma conta Marvel e gerar um **Personal Access Token**.
+
+Para desenvolvimento local, a Marvel permite a utilização desse token sem a necessidade de implementar o fluxo OAuth2 completo.
+
+O token pode ser gerado seguindo as instruções disponíveis na [documentação de autenticação da Marvel Developer API](https://marvelapp.com/developers/documentation/authentication).
+
+Após acessar a página:
+
+1. Faça login com uma conta Marvel;
+2. Gere um Personal Access Token;
+3. Copie o token gerado;
+4. Abra o arquivo `.env` criado anteriormente;
+5. Informe o token na variável:
+
+```env
+MARVEL_API_TOKEN=seu_token_aqui
+```
+
+O token será utilizado pelos testes no header HTTP de autenticação:
+
+```text
+Authorization: Bearer <token>
+```
+
+O Personal Access Token deve permanecer somente no arquivo `.env` local.
 
 > O arquivo `.env` não deve ser versionado. Credenciais e outros dados sensíveis não devem ser adicionados ao repositório.
 
+Documentação oficial:
+
+- [Marvel Developer API — Getting Started](https://marvelapp.com/developers/documentation/getting-started)
+- [Marvel Developer API — Authentication](https://marvelapp.com/developers/documentation/authentication)
+
+---
+
 ## Instalação
 
-Instale as dependências do projeto:
+Após clonar o repositório, acesse o diretório do projeto e instale as dependências:
 
 ```bash
 npm install
@@ -158,75 +253,108 @@ Instale os navegadores utilizados pelo Playwright:
 npx playwright install
 ```
 
+Crie o arquivo local de variáveis de ambiente:
+
+```bash
+cp .env.example .env
+```
+
+Configure o `MARVEL_API_TOKEN` no arquivo `.env` conforme descrito na seção de configuração.
+
+> Para executar somente os testes Web, o token da Marvel Developer API não é necessário.
+
+---
+
 ## Execução dos testes
 
-Para executar todos os testes:
+### Executar a suíte completa
+
+Após instalar as dependências e configurar o `.env`:
 
 ```bash
 npx playwright test
 ```
 
-Para executar somente os testes Web:
+### Executar somente os testes Web
 
 ```bash
 npx playwright test tests/web
 ```
 
-Para executar somente os testes de API:
+### Executar somente os testes de API
+
+Os testes de API dependem de um `MARVEL_API_TOKEN` válido configurado no arquivo `.env`.
 
 ```bash
 npx playwright test tests/api
 ```
 
-Para acompanhar visualmente a execução dos testes Web:
+### Executar somente os testes de resiliência
+
+```bash
+npx playwright test tests/resilience
+```
+
+### Acompanhar visualmente os testes Web
 
 ```bash
 npx playwright test tests/web --headed
 ```
 
-Para abrir o relatório HTML gerado pelo Playwright:
+### Abrir o relatório HTML
+
+Após a execução dos testes:
 
 ```bash
 npx playwright show-report
 ```
 
+---
+
+## Resultado da execução
+
+A execução final da suíte foi concluída com sucesso:
+
+```text
+Running 11 tests using 3 workers
+11 passed
+```
+
+As evidências da execução estão disponíveis no diretório `evidencias/`.
+
+---
+
 ## Evidências
 
-As evidências relevantes das execuções serão armazenadas no diretório:
+As principais evidências coletadas durante o desenvolvimento e a execução dos testes estão organizadas no diretório `evidencias/`.
 
-`evidences/`
+As evidências contemplam:
 
-Entre as evidências consideradas relevantes estão:
+- Indisponibilidade da API originalmente prevista para o desafio, com retorno `502 Bad Gateway`;
+- Validação com sucesso da Marvel Developer API utilizada como alternativa;
+- Validação do comportamento da API com token de autenticação inválido, retornando `401 Unauthorized`;
+- Execução dos testes automatizados com Playwright;
+- Resultado da execução completa da suíte.
 
-- Registros da indisponibilidade da API originalmente proposta;
-- Resultados das execuções automatizadas;
-- Screenshots de falhas, quando aplicável;
-- Traces e relatórios gerados pelo Playwright, quando aplicável.
-
-Credenciais, tokens e dados pessoais não devem ser incluídos nas evidências versionadas.
+---
 
 ## Limitações conhecidas
 
-Durante a análise inicial do ambiente, foi identificada indisponibilidade da **Marvel Rivals API** originalmente proposta no desafio, apresentando resposta HTTP `502 Bad Gateway`.
+- A Marvel Developer API utilizada nos testes possui domínio funcional diferente da API originalmente prevista no desafio;
+- O portal Web utilizado não disponibiliza um mecanismo funcional de filtros para a lista de heróis, motivo pelo qual esse cenário foi substituído pela validação de renderização da imagem do herói;
+- Os testes de resiliência foram implementados de forma controlada, sem provocar falhas reais nos serviços externos;
+- Por se tratar de aplicações públicas externas, alterações de disponibilidade, conteúdo, estrutura da página ou contrato das APIs podem impactar futuras execuções da suíte.
 
-O problema também afetou o fluxo necessário para geração da API Key, impossibilitando a execução confiável dos cenários funcionais previstos para essa integração.
-
-A indisponibilidade foi:
-
-- Reproduzida;
-- Documentada com evidências;
-- Comunicada aos responsáveis pelo desafio.
-
-Após o reporte, foi autorizada a utilização da **Marvel Developer API** como alternativa.
-
-Por esse motivo, os testes automatizados de API utilizam um domínio funcional diferente do originalmente proposto, preservando os objetivos técnicos relacionados a autenticação, contrato, tratamento de respostas e automação.
-
-Por se tratar de aplicações públicas externas, alterações de disponibilidade, conteúdo ou contrato também podem impactar futuras execuções da suíte.
+---
 
 ## Uso de Inteligência Artificial
 
-Ferramentas de Inteligência Artificial foram utilizadas como apoio durante o desenvolvimento deste projeto.
+Ferramentas de Inteligência Artificial foram utilizadas como apoio durante o desenvolvimento deste projeto, principalmente para:
 
-O uso de IA, as validações realizadas e as decisões técnicas tomadas durante o desenvolvimento serão documentados nesta seção ao final da implementação.
+- Estruturação e revisão da estratégia de testes;
+- Discussão de cenários e critérios de priorização;
+- Apoio na implementação e revisão dos testes automatizados;
+- Análise de erros encontrados durante a execução;
+- Organização e revisão da documentação.
 
-> Todo conteúdo gerado com auxílio de IA será revisado e validado antes de ser incorporado à solução.
+> As sugestões geradas por IA foram revisadas, validadas e adaptadas com base no comportamento real das aplicações e APIs utilizadas no desafio. As decisões técnicas e validações finais foram realizadas a partir dos resultados observados durante a implementação e execução dos testes.
