@@ -101,7 +101,7 @@ A suíte implementada contém **11 testes automatizados**, distribuídos entre t
 - `UI-03` — Validação da navegação para detalhes de um herói;
 - `UI-05` — Validação da renderização da imagem do herói.
 
-### API — 4 testes
+### API — 5 testes
 
 - `API-01` — Consulta de usuário autenticado com sucesso;
 - `API-02` — Validação da estrutura da resposta do usuário;
@@ -127,10 +127,22 @@ marvel-rivals-qa-challenge/
 │   └── test-plan.md
 │
 ├── evidencias/
-│   ├── api-alternativa/
-│   ├── api-original-indisponivel/
+│   ├── api/
+│   │   ├── api-alternativa/
+│   │   │   ├── API-01 — Usuário autenticado com sucesso.png
+│   │   │   ├── API-02 — Estrutura da resposta.png
+│   │   │   ├── API-03 — Requisição sem query GraphQL.png
+│   │   │   ├── API-04 — Requisição sem autenticação.png
+│   │   │   └── API-05 — Token inválido.png
+│   │   │
+│   │   └── api-original-indisponivel/
+│   │       ├── api-original-indisponivel-1-502.png
+│   │       └── api-original-indisponivel-2-502.png
+│   │
 │   ├── playwright/
+│   │   └── playwright-html-report.png
 │   └── suite-completa/
+│       └── suite-completa-11-testes-aprovados.png
 │
 ├── tests/
 │   ├── api/
@@ -151,8 +163,8 @@ marvel-rivals-qa-challenge/
 ### Organização
 
 - `docs/`: documentação da estratégia de qualidade, incluindo plano e matriz de testes;
-- `evidencias/api-alternativa/`: evidências das validações realizadas contra a API alternativa;
-- `evidencias/api-original-indisponivel/`: evidências da indisponibilidade identificada na API originalmente prevista para o desafio;
+- `evidencias/api/api-alternativa/`: evidências das validações realizadas contra a API alternativa;
+- `evidencias/api/api-original-indisponivel/`: evidências da indisponibilidade identificada na API originalmente prevista para o desafio;
 - `evidencias/playwright/`: evidências relacionadas às execuções automatizadas;
 - `evidencias/suite-completa/`: evidências da execução completa da suíte;
 - `tests/api/`: testes automatizados da Marvel Developer API;
