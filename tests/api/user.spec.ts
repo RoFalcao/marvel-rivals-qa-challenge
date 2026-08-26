@@ -106,4 +106,30 @@ test.describe('Marvel Developer API', () => {
         );
     });
 
+    test('API-05 - deve rejeitar requisição com token inválido', async ({ request }) => {
+        const response = await request.post(process.env.MARVEL_API_BASE_URL!, {
+            headers: {
+                Authorization: 'Bearer invalid-token',
+                'Content-Type': 'application/json',
+            },
+            data: {
+                query: `
+                query getUser {
+                    user {
+                        pk
+                        username
+                    }
+                }
+            `,
+            },
+        });
+
+        expect(response.status()).toBe(401);
+
+        const body = await response.json();
+
+        expect(body.errors).toBeDefined();
+        expect(body.errors[0].message).toBe('OAuth2 token expired or invalid');
+    });
+
 });
